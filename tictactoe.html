@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tic Tac Toe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="game-box">
+
+    <h1>❌ Tic Tac Toe ⭕</h1>
+
+    <h2 id="status">Player X Turn</h2>
+
+    <h3>
+        ❌ X Score: <span id="xScore">0</span>
+        |
+        ⭕ O Score: <span id="oScore">0</span>
+    </h3>
+
+    <div class="board">
+
+        <div class="cell" onclick="play(this,0)"></div>
+        <div class="cell" onclick="play(this,1)"></div>
+        <div class="cell" onclick="play(this,2)"></div>
+
+        <div class="cell" onclick="play(this,3)"></div>
+        <div class="cell" onclick="play(this,4)"></div>
+        <div class="cell" onclick="play(this,5)"></div>
+
+        <div class="cell" onclick="play(this,6)"></div>
+        <div class="cell" onclick="play(this,7)"></div>
+        <div class="cell" onclick="play(this,8)"></div>
+
+    </div>
+
+    <button class="play-btn" onclick="restartGame()">
+        🔄 Restart
+    </button>
+
+    <button class="back-btn" onclick="location.href='index.html'">
+        ← Back
+    </button>
+
+</div>
+
+<script>
+
+let currentPlayer = "X";
+let board = ["","","","","","","","",""];
+let gameOver = false;
+
+let xScore = 0;
+let oScore = 0;
+
+const wins = [
+    [0,1,2],
+    [3,4,5],
+    [6,7,8],
+    [0,3,6],
+    [1,4,7],
+    [2,5,8],
+    [0,4,8],
+    [2,4,6]
+];
+
+function play(cell,index){
+
+    if(board[index] !== "" || gameOver){
+        return;
+    }
+
+    board[index] = currentPlayer;
+    cell.innerText = currentPlayer;
+
+    checkWinner();
+
+    if(!gameOver){
+
+        currentPlayer = currentPlayer === "X" ? "O" : "X";
+
+        document.getElementById("status").innerText =
+        "Player " + currentPlayer + " Turn";
+    }
+}
+
+function checkWinner(){
+
+    for(let combo of wins){
+
+        let a = combo[0];
+        let b = combo[1];
+        let c = combo[2];
+
+        if(
+            board[a] &&
+            board[a] === board[b] &&
+            board[a] === board[c]
+        ){
+
+            let cells = document.querySelectorAll(".cell");
+
+            cells[a].classList.add("winner");
+            cells[b].classList.add("winner");
+            cells[c].classList.add("winner");
+
+            if(board[a] === "X"){
+                xScore++;
+                document.getElementById("xScore").innerText = xScore;
+            }
+            else{
+                oScore++;
+                document.getElementById("oScore").innerText = oScore;
+            }
+
+            document.getElementById("status").innerText =
+            "🎉 Player " + board[a] + " Wins!";
+
+            gameOver = true;
+            return;
+        }
+    }
+
+    if(!board.includes("")){
+
+        document.getElementById("status").innerText =
+        "🤝 Match Draw";
+
+        gameOver = true;
+    }
+}
+
+function restartGame(){
+
+    board = ["","","","","","","","",""];
+    gameOver = false;
+    currentPlayer = "X";
+
+    document.getElementById("status").innerText =
+    "Player X Turn";
+
+    let cells = document.querySelectorAll(".cell");
+
+    cells.forEach(cell => {
+        cell.innerText = "";
+        cell.classList.remove("winner");
+    });
+}
+
+</script>
+
+</body>
+</html>

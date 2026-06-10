@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Number Guess Game</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<div class="game-box">
+
+    <h1>🎯 Number Guess Game</h1>
+
+    <p>Guess a number between <b>1 and 100</b></p>
+
+    <h3>
+        ❤️ Attempts Left:
+        <span id="attempts">10</span>
+    </h3>
+
+    <input
+        type="number"
+        id="guess"
+        placeholder="Enter Number"
+        onkeydown="if(event.key==='Enter') checkGuess()"
+    >
+
+    <button class="play-btn" onclick="checkGuess()">
+        🎯 Guess Number
+    </button>
+
+    <button class="play-btn" onclick="newGame()">
+        🔄 New Game
+    </button>
+
+    <button class="back-btn" onclick="location.href='index.html'">
+        ← Back To Home
+    </button>
+
+    <h2 id="result"></h2>
+
+    <h3>
+        🏆 Score:
+        <span id="score">0</span>
+    </h3>
+
+    <h3>
+        👑 High Score:
+        <span id="highscore">0</span>
+    </h3>
+
+</div>
+
+<script>
+
+let secretNumber;
+let attempts;
+
+let score =
+Number(localStorage.getItem("score")) || 0;
+
+let highscore =
+Number(localStorage.getItem("highscore")) || 0;
+
+document.getElementById("score").innerText =
+score;
+
+document.getElementById("highscore").innerText =
+highscore;
+
+startGame();
+
+function startGame(){
+
+    secretNumber =
+    Math.floor(Math.random() * 100) + 1;
+
+    attempts = 10;
+
+    document.getElementById("attempts").innerText =
+    attempts;
+
+    document.getElementById("result").innerHTML =
+    "";
+
+    document.getElementById("guess").value =
+    "";
+
+}
+
+function checkGuess(){
+
+    let guess =
+    Number(document.getElementById("guess").value);
+
+    if(!guess){
+
+        document.getElementById("result").innerHTML =
+        "⚠ Enter a number first!";
+        return;
+    }
+
+    attempts--;
+
+    document.getElementById("attempts").innerText =
+    attempts;
+
+    if(guess === secretNumber){
+
+        score += 10;
+
+        localStorage.setItem("score",score);
+
+        document.getElementById("score").innerText =
+        score;
+
+        if(score > highscore){
+
+            highscore = score;
+
+            localStorage.setItem(
+                "highscore",
+                highscore
+            );
+
+            document.getElementById("highscore").innerText =
+            highscore;
+        }
+
+        document.getElementById("result").innerHTML =
+        "🎉 Correct! You guessed the number!";
+
+        return;
+    }
+
+    if(attempts <= 0){
+
+        document.getElementById("result").innerHTML =
+        "💀 Game Over! Number was <b>"
+        + secretNumber +
+        "</b>";
+
+        return;
+    }
+
+    if(guess > secretNumber){
+
+        document.getElementById("result").innerHTML =
+        "📈 Too High!";
+
+    }else{
+
+        document.getElementById("result").innerHTML =
+        "📉 Too Low!";
+    }
+}
+
+function newGame(){
+
+    startGame();
+
+}
+
+</script>
+
+</body>
+</html>
